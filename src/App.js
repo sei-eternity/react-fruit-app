@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import FruitList from './FruitList';
+import FruitFilter from './FruitFilter';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // intialize the filter value to an empty string
+      filterValue: '',
+      fruitsToDisplay: props.fruits
+    }
+  }
+
+  handleFilterChange = (event) => {
+    const searchValue = event.target.value;
+
+    this.setState(function(prevState, props) {
+      
+      const filteredFruitList = props.fruits.filter(function(fruit) {
+        return fruit.toLowerCase().includes(searchValue.toLowerCase())
+      });
+
+      return {
+        filterValue: searchValue,
+        fruitsToDisplay: filteredFruitList
+      };
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <FruitFilter 
+          value={this.state.filterValue}
+          onChange={this.handleFilterChange} />
+        <FruitList fruits={this.state.fruitsToDisplay} />
+      </div>
+    );
+  }
 }
 
 export default App;
